@@ -1,0 +1,432 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SolWaveCoin - Airdrop Claim</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        :root {
+            --primary-blue: #4567b7;
+            --secondary-blue: #3d5ca8;
+            --background-white: #ffffff;
+        }
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f4f6f9;
+            color: #333;
+        }
+        .airdrop-container {
+            max-width: 800px;
+            margin: 120px auto 50px;
+            background-color: white;
+            padding: 40px;
+            border-radius: 15px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+        .step {
+            margin-bottom: 30px;
+            padding: 25px;
+            border-radius: 12px;
+            background-color: #fff;
+            border: 1px solid #e0e0e0;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        .step::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 4px;
+            height: 100%;
+            background: var(--primary-blue);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+        .step:hover::before {
+            opacity: 1;
+        }
+        .step:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.08);
+        }
+        .step-icon {
+            font-size: 40px;
+            color: var(--primary-blue);
+            margin-bottom: 15px;
+            display: inline-block;
+            transition: transform 0.3s ease;
+        }
+        .step:hover .step-icon {
+            transform: scale(1.1);
+        }
+        .airdrop-container .btn {
+            color: white !important;
+            font-size: 1rem;
+            letter-spacing: 0.3px;
+            text-shadow: 0 1px 2px rgba(255, 255, 255, 0.1);
+            position: relative;
+            overflow: hidden;
+        }
+        .btn-claim {
+            background: linear-gradient(135deg, var(--primary-blue), var(--secondary-blue));
+            border: none;
+            padding: 12px 28px;
+            font-weight: 600;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+            color: white !important;
+            font-size: 1rem;
+            letter-spacing: 0.3px;
+            text-shadow: 0 1px 2px rgba(255, 255, 255, 0.1);
+            position: relative;
+            overflow: hidden;
+        }
+        .btn-claim::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, rgba(255,255,255,0.1), rgba(255,255,255,0));
+            transition: transform 0.3s ease;
+            transform: translateX(-100%);
+        }
+        .btn-claim:hover::after {
+            transform: translateX(100%);
+        }
+        /* Override navbar styles from styles.css */
+        .navbar-nav .nav-link {
+            color: #ffffff !important;
+        }
+        .navbar-nav .nav-link:hover {
+            color: var(--primary-blue) !important;
+        }
+        /* Keep original navbar brand color */
+        .navbar-brand {
+            color: #333 !important;
+        }
+        /* Keep presale button styling */
+        .navbar-nav .btn-primary {
+            background: #4567b7 !important;
+            color: white !important;
+        }
+        /* Airdrop Section Styles */
+        .airdrop-section {
+            background: var(--gradient-wave);
+            color: white !important;
+            padding: 5rem 0;
+        }
+
+        .airdrop-section h1 {
+            color: white !important;
+            font-weight: 900;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.2);
+        }
+
+        .airdrop-section .lead {
+            color: white !important;
+            font-size: 1.25rem;
+            text-shadow: 0 1px 2px rgba(0,0,0,0.2);
+        }
+
+        .airdrop-form {
+            background: rgba(255,255,255,0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 15px;
+            padding: 2rem;
+            color: white !important;
+        }
+
+        .airdrop-form input, 
+        .airdrop-form select {
+            color: white !important;
+            background: rgba(0,0,0,0.2);
+            border: 1px solid rgba(255,255,255,0.2);
+        }
+
+        .airdrop-form label {
+            color: white !important;
+        }
+
+        .btn-claim {
+            color: white !important;
+            background: var(--primary-blue);
+            border: none;
+        }
+        .error-message {
+            color: #dc3545 !important;
+            background-color: rgba(220, 53, 69, 0.1);
+            border: 1px solid rgba(220, 53, 69, 0.3);
+            padding: 10px;
+            border-radius: 8px;
+            margin-top: 15px;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+        .error-message:hover {
+            background-color: rgba(220, 53, 69, 0.15);
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-light fixed-top bg-white shadow-sm">
+        <div class="container">
+            <a class="navbar-brand" href="index.html">SolWaveCoin</a>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ml-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="index.html">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="index.html#about">About</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="index.html#tokenomics">Tokenomics</a>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#roadmap">Roadmap</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="btn btn-primary" href="index.html#presale">Presale</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container">
+        <div class="airdrop-container text-center">
+            <h1 class="text-center mb-4">SolWaveCoin Airdrop 🌊</h1>
+            
+            <div class="step">
+                <h3>Step 1: Connect Your Wallet</h3>
+                <p>Connect your Phantom wallet to participate in the airdrop.</p>
+                <button id="connectWallet" class="btn btn-primary">
+                    <i class="fas fa-wallet mr-2"></i>Connect Phantom Wallet
+                </button>
+                <div id="walletStatus" class="mt-3"></div>
+            </div>
+
+            <div class="step">
+                <h3>Step 2: Enter Referral Code (Optional)</h3>
+                <p>If you have a referral code, enter it below to earn extra tokens!</p>
+                <div class="input-group mb-3">
+                    <input type="text" id="referralCode" class="form-control" placeholder="Enter referral code">
+                </div>
+            </div>
+
+            <div class="step">
+                <h3>Step 3: Claim Your Tokens</h3>
+                <p>Claim your SWAVE tokens and get your unique referral code.</p>
+                <button id="claimTokens" class="btn btn-success" disabled>
+                    <i class="fas fa-gift mr-2"></i>Claim Tokens
+                </button>
+            </div>
+
+            <div id="referralInfo" class="step d-none">
+                <h3>Step 4: Share & Earn More!</h3>
+                <p>Share your referral code with friends to earn bonus tokens!</p>
+                <div class="referral-box p-3 bg-light rounded">
+                    <h4>Your Referral Code:</h4>
+                    <div class="input-group mb-3">
+                        <input type="text" id="yourReferralCode" class="form-control" readonly>
+                        <div class="input-group-append">
+                            <button class="btn btn-outline-primary" onclick="copyReferralCode()">
+                                <i class="fas fa-copy"></i>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="referral-stats mt-3">
+                        <p>Referrals: <span id="referralCount">0</span></p>
+                        <p>Bonus Tokens: <span id="bonusTokens">0</span> SWAVE</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.3/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script>
+        // Phantom Wallet Connection
+        const connectPhantomWallet = async () => {
+            if ('solana' in window) {
+                const provider = window.solana;
+                try {
+                    // Connect to Phantom wallet
+                    const response = await provider.connect();
+                    const publicKey = response.publicKey.toString();
+
+                    // Send connection request to backend
+                    const connectResponse = await fetch('http://localhost:3000/connect-wallet', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify({ publicKey })
+                    });
+
+                    const result = await connectResponse.json();
+
+                    if (result.status === 'Connected') {
+                        document.getElementById('airdropStatus').innerHTML = 
+                            `<p class="text-success">Wallet Connected: ${publicKey.slice(0, 6)}...${publicKey.slice(-4)}</p>`;
+                        document.getElementById('checkEligibility').disabled = false;
+                        updateWalletStatus(true);
+                    } else {
+                        throw new Error(result.error);
+                    }
+                } catch (err) {
+                    document.getElementById('airdropStatus').innerHTML = 
+                        `<p class="text-danger">Connection Failed: ${err.message}</p>`;
+                    updateWalletStatus(false);
+                }
+            } else {
+                // Phantom wallet not detected
+                alert('Please install Phantom wallet');
+                window.open('https://phantom.app/', '_blank');
+            }
+        };
+
+        const checkEligibility = async () => {
+            try {
+                const publicKey = window.solana.publicKey.toString();
+                const response = await fetch('http://localhost:3000/check-eligibility', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ publicKey })
+                });
+
+                const result = await response.json();
+
+                if (result.eligible) {
+                    document.getElementById('airdropStatus').innerHTML = 
+                        `<p class="text-success">Eligible for ${result.amount} SWAVE Tokens!</p>`;
+                    document.getElementById('claimTokens').disabled = false;
+                } else {
+                    throw new Error('Not eligible for airdrop');
+                }
+            } catch (err) {
+                document.getElementById('airdropStatus').innerHTML = 
+                    `<p class="text-danger">Eligibility Check Failed: ${err.message}</p>`;
+                showError(err.message);
+            }
+        };
+
+        const claimTokens = async () => {
+            try {
+                const walletAddress = document.getElementById('walletAddress').value;
+                const referralCode = document.getElementById('referralCode').value;
+
+                const response = await fetch('/api/register', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        walletAddress,
+                        referralCode
+                    })
+                });
+
+                const data = await response.json();
+                if (data.success) {
+                    document.getElementById('yourReferralCode').value = data.referralCode;
+                    document.getElementById('referralInfo').classList.remove('d-none');
+                    updateReferralStats();
+                }
+            } catch (error) {
+                showError(error.message);
+            }
+        };
+
+        const verifyWallet = async () => {
+            try {
+                // In a real implementation, this would verify token balance
+                document.getElementById('airdropStatus').innerHTML = 
+                    `<p class="text-success">Tokens Verified in Wallet!</p>`;
+            } catch (err) {
+                document.getElementById('airdropStatus').innerHTML = 
+                    `<p class="text-danger">Verification Failed: ${err.message}</p>`;
+                showError(err.message);
+            }
+        };
+
+        // Enhanced wallet connection status
+        function updateWalletStatus(connected) {
+            const statusElement = document.getElementById('walletStatus');
+            if (connected) {
+                statusElement.innerHTML = '<span class="text-success"><i class="fas fa-check-circle"></i> Connected</span>';
+                document.getElementById('connectWallet').disabled = true;
+            } else {
+                statusElement.innerHTML = '<span class="text-warning"><i class="fas fa-exclamation-circle"></i> Not Connected</span>';
+                document.getElementById('connectWallet').disabled = false;
+            }
+        }
+
+        // Improved error handling
+        function showError(message) {
+            const errorDiv = document.createElement('div');
+            errorDiv.className = 'alert alert-danger alert-dismissible fade show error-message';
+            errorDiv.innerHTML = `
+                <strong><i class="fas fa-exclamation-triangle"></i> Error:</strong> ${message}
+                <button type="button" class="close" data-dismiss="alert">&times;</button>
+            `;
+            const container = document.querySelector('.airdrop-container');
+            container.insertBefore(errorDiv, container.firstChild);
+            setTimeout(() => {
+                if (errorDiv) {
+                    errorDiv.classList.remove('show');
+                    setTimeout(() => errorDiv.remove(), 300);
+                }
+            }, 5000);
+        }
+
+        async function updateReferralStats() {
+            try {
+                const walletAddress = document.getElementById('walletAddress').value;
+                const response = await fetch(`/api/user/${walletAddress}`);
+                const data = await response.json();
+
+                document.getElementById('referralCount').textContent = data.referralCount;
+                document.getElementById('bonusTokens').textContent = 
+                    data.totalTokens - 200; // Subtract base amount
+            } catch (error) {
+                console.error('Error updating referral stats:', error);
+            }
+        }
+
+        function copyReferralCode() {
+            const referralCode = document.getElementById('yourReferralCode');
+            referralCode.select();
+            document.execCommand('copy');
+            
+            // Show copied notification
+            const button = event.currentTarget;
+            const originalHTML = button.innerHTML;
+            button.innerHTML = '<i class="fas fa-check"></i>';
+            setTimeout(() => {
+                button.innerHTML = originalHTML;
+            }, 2000);
+        }
+
+        // Event Listeners
+        document.getElementById('connectWallet').addEventListener('click', connectPhantomWallet);
+        document.getElementById('checkEligibility').addEventListener('click', checkEligibility);
+        document.getElementById('claimTokens').addEventListener('click', claimTokens);
+        document.getElementById('verifyWallet').addEventListener('click', verifyWallet);
+    </script>
+</body>
+</html>
